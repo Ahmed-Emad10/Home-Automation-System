@@ -1,12 +1,13 @@
 module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
                              fdoor,rdoor,winbuzz,alarmbuzz,cooler,heater,display);
     input Rst,SFD,SRD,SW,SFA,clk;
-    input [7:0]ST;                       //one if they need to be done
+    input [7:0]ST;                       
     output fdoor,rdoor,winbuzz,alarmbuzz,cooler,heater; //one if they are done
     output [2:0] display;
     reg fdoor,rdoor,winbuzz,alarmbuzz,cooler,heater;
-    reg [2:0] nextCheck,display;
-    always @(posedge clk ) begin
+    reg [2:0] nextCheck,display;    
+
+    always @(posedge clk or Rst) begin
         if(Rst)begin
             fdoor<=0;
             rdoor<=0;
@@ -18,7 +19,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             nextCheck<=3'b000;  //0-->start, 1-->front, 2-->rear, 3-->fire alarm, 4-->window, 5-->temp, then return back to front
         end
         //All Signals = 0
-        else if(SFD==0&SRD==0&SW==0&SFA==0&ST==0)begin
+        else if(SFD==0&SRD==0&SW==0&SFA==0&(ST>=50&ST<=70))begin
             fdoor<=0;
             rdoor<=0;
             alarmbuzz<=0;
@@ -90,6 +91,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             nextCheck<=3'b001;
             display<=3'b101;
         end
+        
         //After first time
         else if(SFD&nextCheck==1)begin
             fdoor<=1;
@@ -159,6 +161,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             winbuzz<=0;
             cooler<=0;
             heater<=0;
+            display<=3'b000;
         end
         else if(nextCheck==6)begin
             nextCheck<=3'b001;
@@ -168,6 +171,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             winbuzz<=0;
             cooler<=0;
             heater<=0;
+            display<=3'b000;
         end
     end
 endmodule
