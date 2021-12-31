@@ -7,7 +7,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
     reg fdoor,rdoor,winbuzz,alarmbuzz,cooler,heater;
     reg [2:0] nextCheck,display;    
 
-    always @(posedge clk or Rst) begin
+    always @(posedge clk) begin
         if(Rst)begin
             fdoor<=0;
             rdoor<=0;
