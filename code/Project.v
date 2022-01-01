@@ -7,7 +7,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
     reg fdoor,rdoor,winbuzz,alarmbuzz,cooler,heater;
     reg [2:0] nextCheck,display;    
 
-    always @(posedge clk or Rst) begin
+    always @(posedge clk) begin
         if(Rst)begin
             fdoor<=0;
             rdoor<=0;
@@ -18,7 +18,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             display<=3'b000;
             nextCheck<=3'b000;  //0-->start, 1-->front, 2-->rear, 3-->fire alarm, 4-->window, 5-->temp, then return back to front
         end
-        //All Signals = 0
+        //All Signals = 0 (equal to Reset)
         else if(SFD==0&SRD==0&SW==0&SFA==0&(ST>=50&ST<=70))begin
             fdoor<=0;
             rdoor<=0;
@@ -30,7 +30,7 @@ module HomeAutomationSystem( clk,Rst,SFD,SRD,SW,SFA,ST,
             nextCheck=3'b000;
         end
 
-        //fist time 
+        //fist time or after Reset
         else if(SFD&nextCheck==0)begin
             fdoor<=1;
             rdoor<=0;
